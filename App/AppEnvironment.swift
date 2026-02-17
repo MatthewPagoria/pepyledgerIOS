@@ -247,11 +247,11 @@ final class AppEnvironment: ObservableObject {
   }
 
   private static func stringConfigValue(_ key: String) -> String? {
-    if let envValue = ProcessInfo.processInfo.environment[key], !envValue.isEmpty {
-      return envValue
-    }
     if let plistValue = Bundle.main.object(forInfoDictionaryKey: key) as? String, !plistValue.isEmpty {
       return plistValue
+    }
+    if let envValue = ProcessInfo.processInfo.environment[key], !envValue.isEmpty {
+      return envValue
     }
     return nil
   }

@@ -76,6 +76,7 @@ public enum Auth0ServiceError: Error, LocalizedError {
 
 public final class Auth0Service {
   private let configuration: Auth0Configuration
+  private let normalizedDomain: String
   private let defaultBundleID = "com.pepyledger.ios"
   private let storageKey = "pepyledger.auth.session"
   private let userDefaults: UserDefaults
@@ -84,13 +85,21 @@ public final class Auth0Service {
   private var session: AuthSession?
 
   public init(configuration: Auth0Configuration, userDefaults: UserDefaults = .standard) {
-    self.configuration = configuration
+    let sanitizedDomain = Self.normalizedDomain(from: configuration.domain)
+    self.configuration = Auth0Configuration(
+      domain: sanitizedDomain,
+      clientID: configuration.clientID.trimmingCharacters(in: .whitespacesAndNewlines),
+      audience: configuration.audience?.trimmingCharacters(in: .whitespacesAndNewlines),
+      callbackScheme: configuration.callbackScheme.trimmingCharacters(in: .whitespacesAndNewlines),
+      scope: configuration.scope
+    )
+    self.normalizedDomain = sanitizedDomain
     self.userDefaults = userDefaults
     session = Self.loadSession(from: userDefaults, key: storageKey, decoder: decoder)
   }
 
   public func login() async throws -> AuthSession {
-    guard !configuration.domain.isEmpty else {
+    guard !normalizedDomain.isEmpty else {
       throw Auth0ServiceError.misconfigured("AUTH0_DOMAIN is empty")
     }
     guard !configuration.clientID.isEmpty else {
@@ -103,7 +112,7 @@ public final class Auth0Service {
     let callbackURL = try makeRedirectURL(path: "callback")
 
     var webAuth = Auth0
-      .webAuth(clientId: configuration.clientID, domain: configuration.domain)
+      .webAuth(clientId: configuration.clientID, domain: normalizedDomain)
       .scope(configuration.scope)
       .redirectURL(callbackURL)
 
@@ -133,7 +142,7 @@ public final class Auth0Service {
   }
 
   public func logout() async {
-    var webAuth = Auth0.webAuth(clientId: configuration.clientID, domain: configuration.domain)
+    var webAuth = Auth0.webAuth(clientId: configuration.clientID, domain: normalizedDomain)
     if let audience = normalizedAudience {
       webAuth = webAuth.audience(audience)
     }
@@ -174,7 +183,7 @@ public final class Auth0Service {
       }
       do {
         let renewedCredentials = try await Auth0
-          .authentication(clientId: configuration.clientID, domain: configuration.domain)
+          .authentication(clientId: configuration.clientID, domain: normalizedDomain)
           .renew(withRefreshToken: refreshToken, audience: normalizedAudience, scope: configuration.scope)
           .start()
 
@@ -209,11 +218,31 @@ public final class Auth0Service {
 
   private func makeRedirectURL(path: String) throws -> URL {
     let bundleID = Bundle.main.bundleIdentifier ?? defaultBundleID
-    let value = "\(configuration.callbackScheme)://\(configuration.domain)/ios/\(bundleID)/\(path)"
+    let value = "\(configuration.callbackScheme)://\(normalizedDomain)/ios/\(bundleID)/\(path)"
     guard let url = URL(string: value) else {
       throw Auth0ServiceError.misconfigured("Invalid redirect URL: \(value)")
     }
     return url
+  }
+
+  private static func normalizedDomain(from value: String) -> String {
+    let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !trimmed.isEmpty else { return "" }
+
+    if let url = URL(string: trimmed), let host = url.host, !host.isEmpty {
+      return host
+    }
+
+    var domain = trimmed
+    if domain.hasPrefix("https://") {
+      domain.removeFirst("https://".count)
+    } else if domain.hasPrefix("http://") {
+      domain.removeFirst("http://".count)
+    }
+    if let slash = domain.firstIndex(of: "/") {
+      domain = String(domain[..<slash])
+    }
+    return domain.trimmingCharacters(in: .whitespacesAndNewlines)
   }
 
   private func persistSession(_ session: AuthSession) {

@@ -34,7 +34,7 @@ final class AuthSessionStore: ObservableObject {
       let session = try await authService.login()
       state = .authenticated(session)
     } catch {
-      state = .failed(error.localizedDescription)
+      state = .failed(Self.userFacingAuthErrorMessage(from: error))
     }
   }
 
@@ -52,5 +52,14 @@ final class AuthSessionStore: ObservableObject {
       return session
     }
     return nil
+  }
+
+  private static func userFacingAuthErrorMessage(from error: Error) -> String {
+    let message = error.localizedDescription
+    let lowercase = message.lowercased()
+    if lowercase.contains("service not found: https") || lowercase.contains("invalid authority") {
+      return "Auth0 domain is invalid. Set AUTH0_DOMAIN to host only (no https://), for example dev-tenant.us.auth0.com."
+    }
+    return message
   }
 }
