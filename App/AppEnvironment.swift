@@ -196,7 +196,11 @@ final class AppEnvironment: ObservableObject {
   }
 
   private static func makeAuth0Configuration() -> Auth0Configuration? {
-    guard let domain = stringConfigValue("AUTH0_DOMAIN"), !domain.isEmpty else {
+    guard let rawDomain = stringConfigValue("AUTH0_DOMAIN"), !rawDomain.isEmpty else {
+      return nil
+    }
+    let domain = normalizedAuth0Domain(rawDomain)
+    guard !domain.isEmpty else {
       return nil
     }
     guard let clientID = stringConfigValue("AUTH0_CLIENT_ID"), !clientID.isEmpty else {
@@ -210,6 +214,26 @@ final class AppEnvironment: ObservableObject {
       audience: audience,
       callbackScheme: callbackScheme
     )
+  }
+
+  private static func normalizedAuth0Domain(_ value: String) -> String {
+    let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !trimmed.isEmpty else { return "" }
+
+    if let url = URL(string: trimmed), let host = url.host, !host.isEmpty {
+      return host
+    }
+
+    var domain = trimmed
+    if domain.hasPrefix("https://") {
+      domain.removeFirst("https://".count)
+    } else if domain.hasPrefix("http://") {
+      domain.removeFirst("http://".count)
+    }
+    if let slash = domain.firstIndex(of: "/") {
+      domain = String(domain[..<slash])
+    }
+    return domain
   }
 
   private static func configuredSupabaseURL() -> URL? {
