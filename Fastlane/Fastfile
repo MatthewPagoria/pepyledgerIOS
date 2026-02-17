@@ -1,0 +1,58 @@
+default_platform(:ios)
+
+platform :ios do
+  def repo_root
+    File.expand_path("..", __dir__)
+  end
+
+  def resolve_repo_path(path)
+    return path if path.start_with?("/")
+    File.expand_path(path, repo_root)
+  end
+
+  def ios_project
+    configured = ENV.fetch("IOS_PROJECT", "pepyledgerIOS.xcodeproj")
+    resolve_repo_path(configured)
+  end
+
+  def ios_scheme
+    ENV.fetch("IOS_SCHEME", "pepyledgerIOS")
+  end
+
+  desc "Run simulator validation build"
+  lane :test do
+    sh(
+      "xcodebuild " \
+      "-project '#{ios_project}' " \
+      "-scheme '#{ios_scheme}' " \
+      "-configuration Debug " \
+      "-destination 'generic/platform=iOS Simulator' " \
+      "build"
+    )
+  end
+
+  desc "Ship beta build to TestFlight"
+  lane :beta do
+    build_app(
+      project: ios_project,
+      scheme: ios_scheme,
+      export_method: "app-store"
+    )
+    upload_to_testflight(skip_waiting_for_build_processing: true)
+  end
+
+  desc "Ship production release"
+  lane :release do
+    build_app(
+      project: ios_project,
+      scheme: ios_scheme,
+      export_method: "app-store"
+    )
+    upload_to_app_store(submit_for_review: false)
+  end
+
+  desc "Upload App Store metadata only"
+  lane :metadata do
+    deliver(skip_binary_upload: true)
+  end
+end

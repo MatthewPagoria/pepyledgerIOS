@@ -1,0 +1,25 @@
+name: iOS Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Install Ruby gems
+        run: bundle install
+        working-directory: pepyledgerIOS
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+      - name: Upload release build
+        run: bundle exec fastlane ios release
+        working-directory: pepyledgerIOS
+        env:
+          IOS_PROJECT: pepyledgerIOS.xcodeproj
+          IOS_SCHEME: pepyledgerIOS
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}

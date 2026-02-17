@@ -1,0 +1,9 @@
+// Debug defaults. Override with Local.xcconfig for real credentials.
+#include "Config.example.xcconfig"
+#include? "Local.xcconfig"
+
+PRODUCT_BUNDLE_IDENTIFIER = com.pepyledger.ios
+MARKETING_VERSION = 0.1.0
+CURRENT_PROJECT_VERSION = 1
+IPHONEOS_DEPLOYMENT_TARGET = 16.0
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG $(inherited)

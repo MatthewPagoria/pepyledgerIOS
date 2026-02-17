@@ -1,0 +1,10 @@
+.DS_Store
+.build/
+.swiftpm/
+DerivedData/
+xcuserdata/
+.bundle/
+vendor/
+Fastlane/report.xml
+
+App/Config/Local.xcconfig

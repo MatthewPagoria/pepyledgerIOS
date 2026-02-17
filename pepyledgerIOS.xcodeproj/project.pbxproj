@@ -1,0 +1,296 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1B2C3001D1E000000000101 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E000000000202 /* AppEnvironment.swift */; };
+		A1B2C3001D1E000000000102 /* AuthSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E000000000203 /* AuthSessionStore.swift */; };
+		A1B2C3001D1E000000000103 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E000000000204 /* LoginView.swift */; };
+		A1B2C3001D1E000000000104 /* pepyledgerIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E000000000205 /* pepyledgerIOSApp.swift */; };
+		A1B2C3001D1E000000000111 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000911 /* Domain */; };
+		A1B2C3001D1E000000000112 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000912 /* Data */; };
+		A1B2C3001D1E000000000113 /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000913 /* Features */; };
+		A1B2C3001D1E000000000114 /* Services in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000914 /* Services */; };
+		A1B2C3001D1E000000000115 /* UI in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000915 /* UI */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A1B2C3001D1E000000000201 /* pepyledgerIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pepyledgerIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B2C3001D1E000000000202 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		A1B2C3001D1E000000000203 /* AuthSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSessionStore.swift; sourceTree = "<group>"; };
+		A1B2C3001D1E000000000204 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		A1B2C3001D1E000000000205 /* pepyledgerIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pepyledgerIOSApp.swift; sourceTree = "<group>"; };
+		A1B2C3001D1E000000000206 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A1B2C3001D1E000000000207 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		A1B2C3001D1E000000000208 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		A1B2C3001D1E000000000209 /* Config.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.example.xcconfig; sourceTree = "<group>"; };
+		A1B2C3001D1E00000000020A /* Local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Local.xcconfig.example; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A1B2C3001D1E000000000301 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1B2C3001D1E000000000111 /* Domain in Frameworks */,
+				A1B2C3001D1E000000000112 /* Data in Frameworks */,
+				A1B2C3001D1E000000000113 /* Features in Frameworks */,
+				A1B2C3001D1E000000000114 /* Services in Frameworks */,
+				A1B2C3001D1E000000000115 /* UI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A1B2C3001D1E000000000401 = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3001D1E000000000403 /* App */,
+				A1B2C3001D1E000000000402 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A1B2C3001D1E000000000402 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3001D1E000000000201 /* pepyledgerIOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A1B2C3001D1E000000000403 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3001D1E000000000205 /* pepyledgerIOSApp.swift */,
+				A1B2C3001D1E000000000202 /* AppEnvironment.swift */,
+				A1B2C3001D1E000000000203 /* AuthSessionStore.swift */,
+				A1B2C3001D1E000000000204 /* LoginView.swift */,
+				A1B2C3001D1E000000000206 /* Info.plist */,
+				A1B2C3001D1E000000000404 /* Config */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		A1B2C3001D1E000000000404 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3001D1E000000000209 /* Config.example.xcconfig */,
+				A1B2C3001D1E00000000020A /* Local.xcconfig.example */,
+				A1B2C3001D1E000000000207 /* Debug.xcconfig */,
+				A1B2C3001D1E000000000208 /* Release.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A1B2C3001D1E000000000501 /* pepyledgerIOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1B2C3001D1E000000000802 /* Build configuration list for PBXNativeTarget "pepyledgerIOS" */;
+			buildPhases = (
+				A1B2C3001D1E000000000303 /* Sources */,
+				A1B2C3001D1E000000000301 /* Frameworks */,
+				A1B2C3001D1E000000000302 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = pepyledgerIOS;
+			packageProductDependencies = (
+				A1B2C3001D1E000000000911 /* Domain */,
+				A1B2C3001D1E000000000912 /* Data */,
+				A1B2C3001D1E000000000913 /* Features */,
+				A1B2C3001D1E000000000914 /* Services */,
+				A1B2C3001D1E000000000915 /* UI */,
+			);
+			productName = pepyledgerIOS;
+			productReference = A1B2C3001D1E000000000201 /* pepyledgerIOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A1B2C3001D1E000000000601 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					A1B2C3001D1E000000000501 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = A1B2C3001D1E000000000801 /* Build configuration list for PBXProject "pepyledgerIOS" */;
+			compatibilityVersion = "Xcode 15.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A1B2C3001D1E000000000401;
+			packageReferences = (
+				A1B2C3001D1E000000000901 /* XCLocalSwiftPackageReference "." */,
+			);
+			productRefGroup = A1B2C3001D1E000000000402 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1B2C3001D1E000000000501 /* pepyledgerIOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A1B2C3001D1E000000000302 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1B2C3001D1E000000000303 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1B2C3001D1E000000000104 /* pepyledgerIOSApp.swift in Sources */,
+				A1B2C3001D1E000000000101 /* AppEnvironment.swift in Sources */,
+				A1B2C3001D1E000000000102 /* AuthSessionStore.swift in Sources */,
+				A1B2C3001D1E000000000103 /* LoginView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A1B2C3001D1E000000000701 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 0.1.0;
+				SWIFT_VERSION = 5.10;
+			};
+			name = Debug;
+		};
+		A1B2C3001D1E000000000702 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 0.1.0;
+				SWIFT_VERSION = 5.10;
+			};
+			name = Release;
+		};
+		A1B2C3001D1E000000000703 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1B2C3001D1E000000000207 /* Debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.pepyledger.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A1B2C3001D1E000000000704 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1B2C3001D1E000000000208 /* Release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.pepyledger.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A1B2C3001D1E000000000801 /* Build configuration list for PBXProject "pepyledgerIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1B2C3001D1E000000000701 /* Debug */,
+				A1B2C3001D1E000000000702 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1B2C3001D1E000000000802 /* Build configuration list for PBXNativeTarget "pepyledgerIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1B2C3001D1E000000000703 /* Debug */,
+				A1B2C3001D1E000000000704 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A1B2C3001D1E000000000901 /* XCLocalSwiftPackageReference "." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = .;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A1B2C3001D1E000000000911 /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1B2C3001D1E000000000901 /* XCLocalSwiftPackageReference "." */;
+			productName = Domain;
+		};
+		A1B2C3001D1E000000000912 /* Data */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1B2C3001D1E000000000901 /* XCLocalSwiftPackageReference "." */;
+			productName = Data;
+		};
+		A1B2C3001D1E000000000913 /* Features */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1B2C3001D1E000000000901 /* XCLocalSwiftPackageReference "." */;
+			productName = Features;
+		};
+		A1B2C3001D1E000000000914 /* Services */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1B2C3001D1E000000000901 /* XCLocalSwiftPackageReference "." */;
+			productName = Services;
+		};
+		A1B2C3001D1E000000000915 /* UI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1B2C3001D1E000000000901 /* XCLocalSwiftPackageReference "." */;
+			productName = UI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A1B2C3001D1E000000000601 /* Project object */;
+}

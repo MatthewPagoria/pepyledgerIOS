@@ -1,0 +1,26 @@
+name: iOS PR Test Build
+
+on:
+  pull_request:
+    paths:
+      - "pepyledgerIOS/**"
+
+jobs:
+  test:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Install Ruby gems
+        run: bundle install
+        working-directory: pepyledgerIOS
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+      - name: Run tests
+        run: bundle exec fastlane ios test
+        working-directory: pepyledgerIOS
+        env:
+          IOS_PROJECT: pepyledgerIOS.xcodeproj
+          IOS_SCHEME: pepyledgerIOS
