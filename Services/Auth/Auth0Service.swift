@@ -137,8 +137,8 @@ public final class Auth0Service {
     if let audience = normalizedAudience {
       webAuth = webAuth.audience(audience)
     }
-    if let logoutURL = try? makeRedirectURL(path: "logout") {
-      webAuth = webAuth.redirectURL(logoutURL)
+    if let callbackURL = try? makeRedirectURL(path: "callback") {
+      webAuth = webAuth.redirectURL(callbackURL)
     }
 
     do {

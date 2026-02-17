@@ -64,7 +64,7 @@ Runtime keys are passed via `App/Info.plist`:
 For bundle ID `com.pepyledger.ios`, set these allowed URLs in Auth0:
 
 - Callback URL: `com.pepyledger.ios://<AUTH0_DOMAIN>/ios/com.pepyledger.ios/callback`
-- Logout URL: `com.pepyledger.ios://<AUTH0_DOMAIN>/ios/com.pepyledger.ios/logout`
+- Logout URL: `com.pepyledger.ios://<AUTH0_DOMAIN>/ios/com.pepyledger.ios/callback`
 
 If the app shows `unauthorized_client` or callback mismatch, verify these values first.
 
