@@ -1,6 +1,6 @@
 # pepyledgerIOS
 
-Native iPhone app (iOS 16+) for full member parity with the web platform.
+iPhone app shell (iOS 16+) that mirrors the PepyLedger web UI via `WKWebView`.
 
 ## Runnable milestone status
 
@@ -23,20 +23,10 @@ This repo now includes a real Xcode project and shared scheme for local simulato
 
 ## Current scaffold coverage
 
-- SwiftUI member shell with tabs for: Dashboard, Peptides, Log, Cycles, Inventory, Calculator, Essentials, Peptide Library, Billing, Support, Settings.
-- Billing surface wired to a unified-status view model placeholder (`get-subscription-status` contract).
-- GRDB sync store implemented with:
-  - entity table mirroring for `peptides`, `vials`, `oilBottles`, `pillPacks`, `doseLogs`, `cycles`, `scheduleRules`, `dashboardNotes`
-  - outbox queue (`clientMutationId`, retry backoff, stale `in_flight` reset)
-  - `sync-pull` tombstone-first import
-  - `sync-mutate` drain semantics with `STALE_MUTATION` ack + fresh-pull signal and `ACCOUNT_SCOPE_AMBIGUOUS` stop
-  - `sync-push` snapshot client
-- App startup wiring includes auth-gated launch/foreground sync bootstrap in `AppEnvironment`.
-- Auth path uses native Auth0 WebAuth first-class flow (`Auth0Service`) with session persistence.
-- App routing is deterministic:
-  - unauthenticated/auth failure -> `LoginView`
-  - authenticated -> `MemberShellView`
-- Settings includes manual `Sync now` and `Log out` actions.
+- App launches into a full-screen `WKWebView` (`WebAppRootView`) and loads `WEB_APP_BASE_URL`.
+- Navigation policy keeps trusted web/auth hosts in-app and opens non-trusted external links using iOS handlers.
+- Loading/error overlay is handled natively (spinner + retry), while product UI/UX is rendered by the website.
+- Native scaffold modules (`Features`, `Data`, `Services`) are retained in-repo in this phase but are not app-root driven.
 
 ## Local config notes
 
@@ -44,29 +34,31 @@ Config files are in `App/Config`.
 
 1. Copy `App/Config/Local.xcconfig.example` to `App/Config/Local.xcconfig`.
 2. Set:
-   - `SUPABASE_URL`
-   - `AUTH0_DOMAIN`
-   - `AUTH0_CLIENT_ID`
-   - `AUTH0_AUDIENCE`
-   - `AUTH0_CALLBACK_SCHEME` (default `com.pepyledger.ios`)
+   - `WEB_APP_BASE_URL` (default `https://pepyledger.com`)
+   - `AUTH0_DOMAIN` (used to treat tenant host as trusted in-webview during auth redirects)
+   - optional legacy keys kept for compatibility with existing modules:
+     - `SUPABASE_URL`
+     - `AUTH0_CLIENT_ID`
+     - `AUTH0_AUDIENCE`
+     - `AUTH0_CALLBACK_SCHEME`
 3. Keep `Local.xcconfig` uncommitted (ignored by `.gitignore`).
 
 Runtime keys are passed via `App/Info.plist`:
 
+- `WEB_APP_BASE_URL`
 - `SUPABASE_URL`
 - `AUTH0_DOMAIN`
 - `AUTH0_CLIENT_ID`
 - `AUTH0_AUDIENCE`
 - `AUTH0_CALLBACK_SCHEME`
 
-## Auth0 callback/logout contract
+## Auth0 web contract (mirror mode)
 
-For bundle ID `com.pepyledger.ios`, set these allowed URLs in Auth0:
+Because the app mirrors the website, Auth0 should be configured for the web origin:
 
-- Callback URL: `com.pepyledger.ios://<AUTH0_DOMAIN>/ios/com.pepyledger.ios/callback`
-- Logout URL: `com.pepyledger.ios://<AUTH0_DOMAIN>/ios/com.pepyledger.ios/callback`
-
-If the app shows `unauthorized_client` or callback mismatch, verify these values first.
+- Allowed Callback URLs: `https://pepyledger.com/auth/callback`
+- Allowed Logout URLs: `https://pepyledger.com`
+- Allowed Web Origins: `https://pepyledger.com`
 
 For Google social login, also ensure the Google connection is enabled for this Auth0 application in
 `Auth0 Dashboard -> Authentication -> Social -> Google -> Applications`.
@@ -79,11 +71,11 @@ For Google social login, also ensure the Google connection is enabled for this A
 3. Select scheme `pepyledgerIOS` and an iPhone simulator.
 4. Run the app.
 5. Verify milestone behavior:
-   - cold launch shows login screen
-   - Auth0 login succeeds
-   - app transitions to member shell
-   - sync banner transitions to ready after pull
-   - foreground transition re-runs sync without crash
+   - cold launch loads `WEB_APP_BASE_URL` in-app
+   - no top/bottom letterbox black bars on modern iPhones
+   - website UI is identical to browser UI
+   - Auth0/Google login completes in mirrored web flow
+   - external links (mailto/tel/non-trusted domains) open via iOS handlers
 
 ## Tests
 
@@ -92,6 +84,10 @@ For Google social login, also ensure the Google connection is enabled for this A
   - stale `in_flight` recovery
   - `STALE_MUTATION` acknowledgment behavior
   - `ACCOUNT_SCOPE_AMBIGUOUS` stop behavior
+- Web navigation policy tests: `Tests/ServicesTests/WebNavigationPolicyTests.swift`
+  - same-host and trusted auth hosts remain in webview
+  - non-trusted external links open externally
+  - `mailto:` and `tel:` use system handlers
 
 ## Tooling
 
@@ -106,5 +102,5 @@ For Google social login, also ensure the Google connection is enabled for this A
 
 - iPhone-only launch target
 - iOS deployment target: 16.0
-- Billing on iOS uses StoreKit products via RevenueCat
-- Backend integration uses existing Supabase edge APIs (`sync-*`, `get-subscription-status`, notification endpoints)
+- Primary UI/auth source of truth is the website at `WEB_APP_BASE_URL`
+- Native bridge features (downloads/share/push) are deferred in this phase

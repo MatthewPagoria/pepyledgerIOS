@@ -41,6 +41,8 @@
   <string>$(AUTH0_AUDIENCE)</string>
   <key>AUTH0_CALLBACK_SCHEME</key>
   <string>$(AUTH0_CALLBACK_SCHEME)</string>
+  <key>WEB_APP_BASE_URL</key>
+  <string>$(WEB_APP_BASE_URL)</string>
   <key>CFBundleURLTypes</key>
   <array>
     <dict>

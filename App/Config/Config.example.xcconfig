@@ -4,3 +4,4 @@ AUTH0_DOMAIN = dev-og6vg4qwyyef7ntm.us.auth0.com
 AUTH0_CLIENT_ID = pGgQpJ2Exia9dqsJdqAS1LENYiR2UsxD
 AUTH0_AUDIENCE = https:/$()/peptide-ledger-api
 AUTH0_CALLBACK_SCHEME = com.pepyledger.ios
+WEB_APP_BASE_URL = https:/$()/pepyledger.com

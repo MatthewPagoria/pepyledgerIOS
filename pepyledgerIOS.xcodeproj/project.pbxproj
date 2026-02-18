@@ -12,6 +12,7 @@
 		A1B2C3001D1E000000000103 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E000000000204 /* LoginView.swift */; };
 		A1B2C3001D1E000000000104 /* pepyledgerIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E000000000205 /* pepyledgerIOSApp.swift */; };
 		A1B2C3001D1E000000000105 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E00000000020B /* LaunchScreen.storyboard */; };
+		A1B2C3001D1E000000000106 /* WebAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E00000000020C /* WebAppView.swift */; };
 		A1B2C3001D1E000000000111 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000911 /* Domain */; };
 		A1B2C3001D1E000000000112 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000912 /* Data */; };
 		A1B2C3001D1E000000000113 /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000913 /* Features */; };
@@ -31,6 +32,7 @@
 		A1B2C3001D1E000000000209 /* Config.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.example.xcconfig; sourceTree = "<group>"; };
 		A1B2C3001D1E00000000020A /* Local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Local.xcconfig.example; sourceTree = "<group>"; };
 		A1B2C3001D1E00000000020B /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A1B2C3001D1E00000000020C /* WebAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebAppView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 				A1B2C3001D1E000000000203 /* AuthSessionStore.swift */,
 				A1B2C3001D1E000000000204 /* LoginView.swift */,
 				A1B2C3001D1E00000000020B /* LaunchScreen.storyboard */,
+				A1B2C3001D1E00000000020C /* WebAppView.swift */,
 				A1B2C3001D1E000000000206 /* Info.plist */,
 				A1B2C3001D1E000000000404 /* Config */,
 			);
@@ -169,6 +172,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1B2C3001D1E000000000104 /* pepyledgerIOSApp.swift in Sources */,
+				A1B2C3001D1E000000000106 /* WebAppView.swift in Sources */,
 				A1B2C3001D1E000000000101 /* AppEnvironment.swift in Sources */,
 				A1B2C3001D1E000000000102 /* AuthSessionStore.swift in Sources */,
 				A1B2C3001D1E000000000103 /* LoginView.swift in Sources */,
