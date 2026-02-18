@@ -9,8 +9,7 @@
 /* Begin PBXBuildFile section */
 		A1B2C3001D1E000000000101 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E000000000202 /* AppEnvironment.swift */; };
 		A1B2C3001D1E000000000102 /* AuthSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E000000000203 /* AuthSessionStore.swift */; };
-		A1B2C3001D1E000000000103 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E000000000204 /* LoginView.swift */; };
-		A1B2C3001D1E000000000104 /* pepyledgerIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E000000000205 /* pepyledgerIOSApp.swift */; };
+			A1B2C3001D1E000000000104 /* pepyledgerIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E000000000205 /* pepyledgerIOSApp.swift */; };
 			A1B2C3001D1E000000000105 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E00000000020B /* LaunchScreen.storyboard */; };
 			A1B2C3001D1E000000000106 /* WebAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E00000000020C /* WebAppView.swift */; };
 			A1B2C3001D1E000000000107 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E00000000020D /* Assets.xcassets */; };
@@ -25,8 +24,7 @@
 		A1B2C3001D1E000000000201 /* pepyledgerIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pepyledgerIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1B2C3001D1E000000000202 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		A1B2C3001D1E000000000203 /* AuthSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSessionStore.swift; sourceTree = "<group>"; };
-		A1B2C3001D1E000000000204 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		A1B2C3001D1E000000000205 /* pepyledgerIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pepyledgerIOSApp.swift; sourceTree = "<group>"; };
+			A1B2C3001D1E000000000205 /* pepyledgerIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pepyledgerIOSApp.swift; sourceTree = "<group>"; };
 		A1B2C3001D1E000000000206 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A1B2C3001D1E000000000207 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		A1B2C3001D1E000000000208 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
@@ -75,7 +73,6 @@
 				A1B2C3001D1E000000000205 /* pepyledgerIOSApp.swift */,
 				A1B2C3001D1E000000000202 /* AppEnvironment.swift */,
 				A1B2C3001D1E000000000203 /* AuthSessionStore.swift */,
-					A1B2C3001D1E000000000204 /* LoginView.swift */,
 					A1B2C3001D1E00000000020B /* LaunchScreen.storyboard */,
 					A1B2C3001D1E00000000020D /* Assets.xcassets */,
 					A1B2C3001D1E00000000020C /* WebAppView.swift */,
@@ -102,11 +99,12 @@
 		A1B2C3001D1E000000000501 /* pepyledgerIOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A1B2C3001D1E000000000802 /* Build configuration list for PBXNativeTarget "pepyledgerIOS" */;
-			buildPhases = (
-				A1B2C3001D1E000000000303 /* Sources */,
-				A1B2C3001D1E000000000301 /* Frameworks */,
-				A1B2C3001D1E000000000302 /* Resources */,
-			);
+				buildPhases = (
+					A1B2C3001D1E000000000304 /* Enforce Web Mirror Root */,
+					A1B2C3001D1E000000000303 /* Sources */,
+					A1B2C3001D1E000000000301 /* Frameworks */,
+					A1B2C3001D1E000000000302 /* Resources */,
+				);
 			buildRules = (
 			);
 			dependencies = (
@@ -170,6 +168,27 @@
 			};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+			A1B2C3001D1E000000000304 /* Enforce Web Mirror Root */ = {
+				isa = PBXShellScriptBuildPhase;
+				buildActionMask = 2147483647;
+				files = (
+				);
+				inputFileListPaths = (
+				);
+				inputPaths = (
+				);
+				name = "Enforce Web Mirror Root";
+				outputFileListPaths = (
+				);
+				outputPaths = (
+				);
+				runOnlyForDeploymentPostprocessing = 0;
+				shellPath = /bin/sh;
+				shellScript = "ROOT_FILE=\"$SRCROOT/App/pepyledgerIOSApp.swift\"\nif ! grep -q \"WebAppRootView()\" \"$ROOT_FILE\"; then\n  echo \"error: App root must be WebAppRootView() for web mirror mode\"\n  exit 1\nfi\nif grep -q \"LoginView(\" \"$ROOT_FILE\" || grep -q \"MemberShellView(\" \"$ROOT_FILE\"; then\n  echo \"error: Native app roots are disallowed; keep web mirror mode enabled\"\n  exit 1\nfi\n";
+			};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A1B2C3001D1E000000000303 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -179,8 +198,7 @@
 				A1B2C3001D1E000000000106 /* WebAppView.swift in Sources */,
 				A1B2C3001D1E000000000101 /* AppEnvironment.swift in Sources */,
 				A1B2C3001D1E000000000102 /* AuthSessionStore.swift in Sources */,
-				A1B2C3001D1E000000000103 /* LoginView.swift in Sources */,
-			);
+				);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */

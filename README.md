@@ -71,15 +71,19 @@ The iOS shell now routes the auth transaction through `ASWebAuthenticationSessio
 
 1. Ensure full Xcode is selected:
    - `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`
-2. Open `pepyledgerIOS.xcodeproj`.
-3. Select scheme `pepyledgerIOS` and an iPhone simulator.
-4. Run the app.
-5. Verify milestone behavior:
+2. Use the deterministic run script (recommended):
+   - `./scripts/run-ios-sim.sh`
+3. Or open `pepyledgerIOS.xcodeproj`, select scheme `pepyledgerIOS`, and run.
+4. Verify milestone behavior:
    - cold launch loads `WEB_APP_BASE_URL` in-app
    - no top/bottom letterbox black bars on modern iPhones
    - website UI is identical to browser UI
    - Auth0/Google login completes in mirrored web flow
    - external links (mailto/tel/non-trusted domains) open via iOS handlers
+
+Notes:
+- `scripts/run-ios-sim.sh` pins `-derivedDataPath` so you always install the app built from this repo.
+- Avoid `find ~/Library/Developer/Xcode/DerivedData ... | head -n 1` because it can pick stale apps from other workspaces.
 
 ## Tests
 
