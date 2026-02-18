@@ -11,11 +11,12 @@
 		A1B2C3001D1E000000000102 /* AuthSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E000000000203 /* AuthSessionStore.swift */; };
 		A1B2C3001D1E000000000103 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E000000000204 /* LoginView.swift */; };
 		A1B2C3001D1E000000000104 /* pepyledgerIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E000000000205 /* pepyledgerIOSApp.swift */; };
-		A1B2C3001D1E000000000105 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E00000000020B /* LaunchScreen.storyboard */; };
-		A1B2C3001D1E000000000106 /* WebAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E00000000020C /* WebAppView.swift */; };
-		A1B2C3001D1E000000000111 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000911 /* Domain */; };
-		A1B2C3001D1E000000000112 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000912 /* Data */; };
-		A1B2C3001D1E000000000113 /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000913 /* Features */; };
+			A1B2C3001D1E000000000105 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E00000000020B /* LaunchScreen.storyboard */; };
+			A1B2C3001D1E000000000106 /* WebAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E00000000020C /* WebAppView.swift */; };
+			A1B2C3001D1E000000000107 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3001D1E00000000020D /* Assets.xcassets */; };
+			A1B2C3001D1E000000000111 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000911 /* Domain */; };
+			A1B2C3001D1E000000000112 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000912 /* Data */; };
+			A1B2C3001D1E000000000113 /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000913 /* Features */; };
 		A1B2C3001D1E000000000114 /* Services in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000914 /* Services */; };
 		A1B2C3001D1E000000000115 /* UI in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3001D1E000000000915 /* UI */; };
 /* End PBXBuildFile section */
@@ -30,9 +31,10 @@
 		A1B2C3001D1E000000000207 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		A1B2C3001D1E000000000208 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		A1B2C3001D1E000000000209 /* Config.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.example.xcconfig; sourceTree = "<group>"; };
-		A1B2C3001D1E00000000020A /* Local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Local.xcconfig.example; sourceTree = "<group>"; };
-		A1B2C3001D1E00000000020B /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		A1B2C3001D1E00000000020C /* WebAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebAppView.swift; sourceTree = "<group>"; };
+			A1B2C3001D1E00000000020A /* Local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Local.xcconfig.example; sourceTree = "<group>"; };
+			A1B2C3001D1E00000000020B /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+			A1B2C3001D1E00000000020C /* WebAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebAppView.swift; sourceTree = "<group>"; };
+			A1B2C3001D1E00000000020D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,11 +75,12 @@
 				A1B2C3001D1E000000000205 /* pepyledgerIOSApp.swift */,
 				A1B2C3001D1E000000000202 /* AppEnvironment.swift */,
 				A1B2C3001D1E000000000203 /* AuthSessionStore.swift */,
-				A1B2C3001D1E000000000204 /* LoginView.swift */,
-				A1B2C3001D1E00000000020B /* LaunchScreen.storyboard */,
-				A1B2C3001D1E00000000020C /* WebAppView.swift */,
-				A1B2C3001D1E000000000206 /* Info.plist */,
-				A1B2C3001D1E000000000404 /* Config */,
+					A1B2C3001D1E000000000204 /* LoginView.swift */,
+					A1B2C3001D1E00000000020B /* LaunchScreen.storyboard */,
+					A1B2C3001D1E00000000020D /* Assets.xcassets */,
+					A1B2C3001D1E00000000020C /* WebAppView.swift */,
+					A1B2C3001D1E000000000206 /* Info.plist */,
+					A1B2C3001D1E000000000404 /* Config */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -159,11 +162,12 @@
 		A1B2C3001D1E000000000302 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
-			files = (
-				A1B2C3001D1E000000000105 /* LaunchScreen.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
+				files = (
+					A1B2C3001D1E000000000105 /* LaunchScreen.storyboard in Resources */,
+					A1B2C3001D1E000000000107 /* Assets.xcassets in Resources */,
+				);
+				runOnlyForDeploymentPostprocessing = 0;
+			};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -206,11 +210,12 @@
 		};
 		A1B2C3001D1E000000000703 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A1B2C3001D1E000000000207 /* Debug.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				baseConfigurationReference = A1B2C3001D1E000000000207 /* Debug.xcconfig */;
+				buildSettings = {
+					ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+					ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+					CODE_SIGN_STYLE = Automatic;
+					ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = App/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -224,11 +229,12 @@
 		};
 		A1B2C3001D1E000000000704 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A1B2C3001D1E000000000208 /* Release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				baseConfigurationReference = A1B2C3001D1E000000000208 /* Release.xcconfig */;
+				buildSettings = {
+					ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+					ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+					CODE_SIGN_STYLE = Automatic;
+					ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = App/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
