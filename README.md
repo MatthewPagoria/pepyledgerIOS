@@ -25,6 +25,7 @@ This repo now includes a real Xcode project and shared scheme for local simulato
 
 - App launches into a full-screen `WKWebView` (`WebAppRootView`) and loads `WEB_APP_BASE_URL`.
 - Navigation policy keeps trusted web/auth hosts in-app and opens non-trusted external links using iOS handlers.
+- Auth redirects to Auth0 `/authorize` are elevated to `ASWebAuthenticationSession` so Google sign-in is not blocked by embedded-webview policy.
 - Loading/error overlay is handled natively (spinner + retry), while product UI/UX is rendered by the website.
 - Native scaffold modules (`Features`, `Data`, `Services`) are retained in-repo in this phase but are not app-root driven.
 
@@ -60,8 +61,9 @@ Because the app mirrors the website, Auth0 should be configured for the web orig
 - Allowed Logout URLs: `https://pepyledger.com`
 - Allowed Web Origins: `https://pepyledger.com`
 
-For Google social login, also ensure the Google connection is enabled for this Auth0 application in
+For Google social login, ensure the Google connection is enabled for this Auth0 application in
 `Auth0 Dashboard -> Authentication -> Social -> Google -> Applications`.
+The iOS shell now routes the auth transaction through `ASWebAuthenticationSession` and then returns the callback URL to the in-app webview.
 
 ## Local simulator run
 
