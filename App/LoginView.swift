@@ -48,6 +48,9 @@ struct LoginView: View {
 
       Spacer()
     }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(Color(uiColor: .systemBackground))
+    .ignoresSafeArea()
     .padding(.bottom, 40)
   }
 

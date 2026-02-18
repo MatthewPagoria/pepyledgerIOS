@@ -60,6 +60,12 @@ final class AuthSessionStore: ObservableObject {
     if lowercase.contains("service not found: https") || lowercase.contains("invalid authority") {
       return "Auth0 domain is invalid. Set AUTH0_DOMAIN to host only (no https://), for example dev-tenant.us.auth0.com."
     }
+    if lowercase.contains("unauthorized_client") || lowercase.contains("callback") {
+      return "Auth0 app settings are incomplete. Confirm callback/logout URLs for com.pepyledger.ios and verify Google connection is enabled for this app."
+    }
+    if lowercase.contains("access_denied") || lowercase.contains("something went wrong") {
+      return "Auth0 denied the login request. Verify AUTH0_AUDIENCE and ensure the Google social connection is enabled for this Auth0 application."
+    }
     return message
   }
 }

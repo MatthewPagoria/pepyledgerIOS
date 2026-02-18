@@ -68,6 +68,9 @@ For bundle ID `com.pepyledger.ios`, set these allowed URLs in Auth0:
 
 If the app shows `unauthorized_client` or callback mismatch, verify these values first.
 
+For Google social login, also ensure the Google connection is enabled for this Auth0 application in
+`Auth0 Dashboard -> Authentication -> Social -> Google -> Applications`.
+
 ## Local simulator run
 
 1. Ensure full Xcode is selected:

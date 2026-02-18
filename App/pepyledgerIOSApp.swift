@@ -9,6 +9,8 @@ struct pepyledgerIOSApp: App {
   var body: some Scene {
     WindowGroup {
       ZStack(alignment: .top) {
+        Color(uiColor: .systemBackground)
+          .ignoresSafeArea()
         switch appEnvironment.authState {
         case .authenticated:
           MemberShellView(
