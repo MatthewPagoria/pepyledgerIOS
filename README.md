@@ -53,11 +53,13 @@ Runtime keys are passed via `App/Info.plist`:
 - `AUTH0_AUDIENCE`
 - `AUTH0_CALLBACK_SCHEME`
 
-## Auth0 web contract (mirror mode)
+## Auth0 contract (mirror mode + native bridge)
 
 Because the app mirrors the website, Auth0 should be configured for the web origin:
 
-- Allowed Callback URLs: `https://pepyledger.com/auth/callback`
+- Allowed Callback URLs:
+  - `https://pepyledger.com/auth/callback`
+  - `com.pepyledger.ios://<AUTH0_DOMAIN>/ios/com.pepyledger.ios/callback`
 - Allowed Logout URLs: `https://pepyledger.com`
 - Allowed Web Origins: `https://pepyledger.com`
 

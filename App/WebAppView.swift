@@ -14,6 +14,8 @@ private enum WebAppRuntimeConfiguration {
   private static let defaultBaseURL = URL(string: "https://pepyledger.com")!
   private static let webBaseURLKey = "WEB_APP_BASE_URL"
   private static let auth0DomainKey = "AUTH0_DOMAIN"
+  private static let auth0CallbackSchemeKey = "AUTH0_CALLBACK_SCHEME"
+  private static let defaultCallbackScheme = "com.pepyledger.ios"
 
   static let trustedHostSuffixes = [".auth0.com"]
   static let authHostSuffixes = [".auth0.com"]
@@ -55,6 +57,16 @@ private enum WebAppRuntimeConfiguration {
     return hosts
   }
 
+  static var auth0CallbackScheme: String {
+    guard
+      let raw = Bundle.main.object(forInfoDictionaryKey: auth0CallbackSchemeKey) as? String
+    else {
+      return defaultCallbackScheme
+    }
+    let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+    return trimmed.isEmpty ? defaultCallbackScheme : trimmed
+  }
+
   private static func normalizedURL(_ raw: String) -> URL? {
     let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
     guard !trimmed.isEmpty else { return nil }
@@ -79,6 +91,9 @@ private enum WebAppRuntimeConfiguration {
 private struct NativeWebAuthenticationRequest {
   let startURL: URL
   let expectedCallbackURL: URL
+  let callbackScheme: String
+  let clientID: String?
+  let nativeRedirectURL: URL
 }
 
 private enum NativeWebAuthenticationError: LocalizedError {
@@ -105,7 +120,7 @@ private final class NativeWebAuthenticationCoordinator: NSObject, ASWebAuthentic
     cancel()
 
     if #available(iOS 17.4, *) {
-      let callback = callbackMatcher(for: request.expectedCallbackURL)
+      let callback = ASWebAuthenticationSession.Callback.customScheme(request.callbackScheme)
       let session = ASWebAuthenticationSession(url: request.startURL, callback: callback) { callbackURL, error in
         if let error {
           completion(.failure(error))
@@ -126,10 +141,9 @@ private final class NativeWebAuthenticationCoordinator: NSObject, ASWebAuthentic
       return
     }
 
-    let callbackScheme = request.expectedCallbackURL.scheme
     let session = ASWebAuthenticationSession(
       url: request.startURL,
-      callbackURLScheme: callbackScheme
+      callbackURLScheme: request.callbackScheme
     ) { callbackURL, error in
       if let error {
         completion(.failure(error))
@@ -174,24 +188,6 @@ private final class NativeWebAuthenticationCoordinator: NSObject, ASWebAuthentic
   private func configure(_ session: ASWebAuthenticationSession) {
     session.presentationContextProvider = self
     session.prefersEphemeralWebBrowserSession = false
-  }
-
-  @available(iOS 17.4, *)
-  private func callbackMatcher(for callbackURL: URL) -> ASWebAuthenticationSession.Callback {
-    if
-      let scheme = callbackURL.scheme?.lowercased(),
-      (scheme == "http" || scheme == "https"),
-      let host = callbackURL.host
-    {
-      let path = callbackURL.path.isEmpty ? "/" : callbackURL.path
-      return .https(host: host, path: path)
-    }
-
-    let fallbackScheme = callbackURL.scheme?.trimmingCharacters(in: .whitespacesAndNewlines)
-    if let fallbackScheme, !fallbackScheme.isEmpty {
-      return .customScheme(fallbackScheme)
-    }
-    return .customScheme("com.pepyledger.ios")
   }
 
   private static func rebasedCallbackURL(_ callbackURL: URL, expected: URL) -> URL {
@@ -400,7 +396,7 @@ private struct WebAppView: UIViewRepresentable {
         return
       }
 
-      if let authRequest = nativeAuthRequest(for: url) {
+      if let authRequest = nativeAuthRequest(for: navigationAction) {
         decisionHandler(.cancel)
         startNativeWebAuthentication(authRequest, webView: webView)
         return
@@ -434,7 +430,7 @@ private struct WebAppView: UIViewRepresentable {
     ) -> WKWebView? {
       guard let url = navigationAction.request.url else { return nil }
 
-      if let authRequest = nativeAuthRequest(for: url) {
+      if let authRequest = nativeAuthRequest(for: navigationAction) {
         startNativeWebAuthentication(authRequest, webView: webView)
         return nil
       }
@@ -464,37 +460,48 @@ private struct WebAppView: UIViewRepresentable {
       isAuthenticating = true
       loadState.wrappedValue = .loading
 
-      nativeWebAuthentication.start(request: request) { [weak self, weak webView] result in
-        DispatchQueue.main.async {
-          guard let self else { return }
-          self.isAuthenticating = false
+      prepareAuthTransactionRedirectOverride(request, webView: webView) { [weak self, weak webView] in
+        guard let self else { return }
+        self.nativeWebAuthentication.start(request: request) { [weak self, weak webView] result in
+          DispatchQueue.main.async {
+            guard let self else { return }
+            self.isAuthenticating = false
 
-          switch result {
-          case .success(let callbackURL):
-            guard let scheme = callbackURL.scheme?.lowercased() else {
-              self.loadState.wrappedValue = .failed("Secure sign-in returned an invalid callback URL.")
-              return
-            }
+            switch result {
+            case .success(let callbackURL):
+              guard let scheme = callbackURL.scheme?.lowercased() else {
+                self.loadState.wrappedValue = .failed("Secure sign-in returned an invalid callback URL.")
+                return
+              }
 
-            if scheme == "http" || scheme == "https" {
-              webView?.load(URLRequest(url: callbackURL))
-              return
-            }
+              if scheme == "http" || scheme == "https" {
+                webView?.load(URLRequest(url: callbackURL))
+                return
+              }
 
-            UIApplication.shared.open(callbackURL, options: [:], completionHandler: nil)
-            self.loadState.wrappedValue = .loaded
-          case .failure(let error):
-            if self.isUserCanceledAuthentication(error) {
+              UIApplication.shared.open(callbackURL, options: [:], completionHandler: nil)
               self.loadState.wrappedValue = .loaded
-              return
+            case .failure(let error):
+              if self.isUserCanceledAuthentication(error) {
+                self.loadState.wrappedValue = .loaded
+                return
+              }
+              self.loadState.wrappedValue = .failed(error.localizedDescription)
             }
-            self.loadState.wrappedValue = .failed(error.localizedDescription)
           }
         }
       }
     }
 
-    private func nativeAuthRequest(for url: URL) -> NativeWebAuthenticationRequest? {
+    private func nativeAuthRequest(for navigationAction: WKNavigationAction) -> NativeWebAuthenticationRequest? {
+      guard let targetFrame = navigationAction.targetFrame, !targetFrame.isMainFrame else {
+        return nativeAuthRequestForTopLevelURL(navigationAction.request.url)
+      }
+      return nil
+    }
+
+    private func nativeAuthRequestForTopLevelURL(_ candidateURL: URL?) -> NativeWebAuthenticationRequest? {
+      guard let url = candidateURL else { return nil }
       guard
         let scheme = url.scheme?.lowercased(),
         scheme == "http" || scheme == "https",
@@ -509,17 +516,57 @@ private struct WebAppView: UIViewRepresentable {
       }
 
       guard
-        let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-        let redirectURI = components.queryItems?.first(where: { $0.name == "redirect_uri" })?.value,
-        let callbackURL = URL(string: redirectURI)
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+        var queryItems = components.queryItems,
+        let redirectIndex = queryItems.firstIndex(where: { $0.name == "redirect_uri" }),
+        let redirectURI = queryItems[redirectIndex].value,
+        let callbackURL = URL(string: redirectURI),
+        let authHost = url.host
       else {
         return nil
       }
 
+      let callbackScheme = WebAppRuntimeConfiguration.auth0CallbackScheme
+      let bundleID = Bundle.main.bundleIdentifier ?? "com.pepyledger.ios"
+      let nativeRedirectValue = "\(callbackScheme)://\(authHost)/ios/\(bundleID)/callback"
+      guard let nativeRedirectURL = URL(string: nativeRedirectValue) else {
+        return nil
+      }
+
+      queryItems[redirectIndex].value = nativeRedirectURL.absoluteString
+      components.queryItems = queryItems
+      guard let rewrittenAuthorizeURL = components.url else {
+        return nil
+      }
+
+      let clientID = queryItems.first(where: { $0.name == "client_id" })?.value?.trimmingCharacters(in: .whitespacesAndNewlines)
+
       return NativeWebAuthenticationRequest(
-        startURL: url,
-        expectedCallbackURL: callbackURL
+        startURL: rewrittenAuthorizeURL,
+        expectedCallbackURL: callbackURL,
+        callbackScheme: callbackScheme,
+        clientID: clientID?.isEmpty == true ? nil : clientID,
+        nativeRedirectURL: nativeRedirectURL
       )
+    }
+
+    private func prepareAuthTransactionRedirectOverride(
+      _ request: NativeWebAuthenticationRequest,
+      webView: WKWebView,
+      completion: @escaping () -> Void
+    ) {
+      guard let clientID = request.clientID, !clientID.isEmpty else {
+        completion()
+        return
+      }
+
+      let script = Self.transactionRedirectOverrideScript(
+        clientID: clientID,
+        redirectURI: request.nativeRedirectURL.absoluteString
+      )
+      webView.evaluateJavaScript(script) { _, _ in
+        completion()
+      }
     }
 
     private func isAuthHost(_ host: String?) -> Bool {
@@ -541,6 +588,61 @@ private struct WebAppView: UIViewRepresentable {
 
     private static func normalizedHost(_ value: String) -> String {
       value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    }
+
+    private static func transactionRedirectOverrideScript(clientID: String, redirectURI: String) -> String {
+      let escapedClientID = javaScriptEscaped(clientID)
+      let escapedRedirectURI = javaScriptEscaped(redirectURI)
+
+      return """
+      (function() {
+        const key = 'a0.spajs.txs.\(escapedClientID)';
+        const legacyKey = '_legacy_' + key;
+        const redirectUri = '\(escapedRedirectURI)';
+        const cookies = document.cookie ? document.cookie.split('; ') : [];
+
+        const updateCookie = function(cookieKey) {
+          const prefix = cookieKey + '=';
+          const entry = cookies.find(function(item) { return item.indexOf(prefix) === 0; });
+          if (!entry) return;
+
+          const raw = entry.substring(prefix.length);
+          try {
+            const parsed = JSON.parse(decodeURIComponent(raw));
+            parsed.redirect_uri = redirectUri;
+            document.cookie =
+              cookieKey +
+              '=' +
+              encodeURIComponent(JSON.stringify(parsed)) +
+              '; path=/; secure; samesite=none';
+          } catch (error) {
+            // Ignore transaction cookie parsing failures.
+          }
+        };
+
+        updateCookie(key);
+        updateCookie(legacyKey);
+
+        try {
+          const sessionRaw = window.sessionStorage.getItem(key);
+          if (sessionRaw) {
+            const parsed = JSON.parse(sessionRaw);
+            parsed.redirect_uri = redirectUri;
+            window.sessionStorage.setItem(key, JSON.stringify(parsed));
+          }
+        } catch (error) {
+          // Ignore session storage failures.
+        }
+      })();
+      """
+    }
+
+    private static func javaScriptEscaped(_ value: String) -> String {
+      value
+        .replacingOccurrences(of: "\\", with: "\\\\")
+        .replacingOccurrences(of: "'", with: "\\'")
+        .replacingOccurrences(of: "\n", with: "\\n")
+        .replacingOccurrences(of: "\r", with: "\\r")
     }
   }
 }
