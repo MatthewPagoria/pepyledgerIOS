@@ -94,6 +94,8 @@ private struct NativeWebAuthenticationRequest {
   let callbackScheme: String
   let clientID: String?
   let nativeRedirectURL: URL
+  let nonce: String?
+  let state: String?
 }
 
 private enum NativeWebAuthenticationError: LocalizedError {
@@ -540,13 +542,17 @@ private struct WebAppView: UIViewRepresentable {
       }
 
       let clientID = queryItems.first(where: { $0.name == "client_id" })?.value?.trimmingCharacters(in: .whitespacesAndNewlines)
+      let nonce = queryItems.first(where: { $0.name == "nonce" })?.value
+      let state = queryItems.first(where: { $0.name == "state" })?.value
 
       return NativeWebAuthenticationRequest(
         startURL: rewrittenAuthorizeURL,
         expectedCallbackURL: callbackURL,
         callbackScheme: callbackScheme,
         clientID: clientID?.isEmpty == true ? nil : clientID,
-        nativeRedirectURL: nativeRedirectURL
+        nativeRedirectURL: nativeRedirectURL,
+        nonce: nonce,
+        state: state
       )
     }
 
@@ -562,7 +568,9 @@ private struct WebAppView: UIViewRepresentable {
 
       let script = Self.transactionRedirectOverrideScript(
         clientID: clientID,
-        redirectURI: request.nativeRedirectURL.absoluteString
+        redirectURI: request.nativeRedirectURL.absoluteString,
+        nonce: request.nonce,
+        state: request.state
       )
       webView.evaluateJavaScript(script) { _, _ in
         completion()
@@ -590,16 +598,36 @@ private struct WebAppView: UIViewRepresentable {
       value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
     }
 
-    private static func transactionRedirectOverrideScript(clientID: String, redirectURI: String) -> String {
+    private static func transactionRedirectOverrideScript(
+      clientID: String,
+      redirectURI: String,
+      nonce: String?,
+      state: String?
+    ) -> String {
       let escapedClientID = javaScriptEscaped(clientID)
       let escapedRedirectURI = javaScriptEscaped(redirectURI)
+      let escapedNonce = javaScriptOptionalStringLiteral(nonce)
+      let escapedState = javaScriptOptionalStringLiteral(state)
 
       return """
       (function() {
         const key = 'a0.spajs.txs.\(escapedClientID)';
         const legacyKey = '_legacy_' + key;
         const redirectUri = '\(escapedRedirectURI)';
+        const nonce = \(escapedNonce);
+        const state = \(escapedState);
         const cookies = document.cookie ? document.cookie.split('; ') : [];
+
+        const normalize = function(parsed) {
+          parsed.redirect_uri = redirectUri;
+          if (typeof nonce === 'string' && nonce.length > 0) {
+            parsed.nonce = nonce;
+          }
+          if (typeof state === 'string' && state.length > 0) {
+            parsed.state = state;
+          }
+          return parsed;
+        };
 
         const updateCookie = function(cookieKey) {
           const prefix = cookieKey + '=';
@@ -608,8 +636,7 @@ private struct WebAppView: UIViewRepresentable {
 
           const raw = entry.substring(prefix.length);
           try {
-            const parsed = JSON.parse(decodeURIComponent(raw));
-            parsed.redirect_uri = redirectUri;
+            const parsed = normalize(JSON.parse(decodeURIComponent(raw)));
             document.cookie =
               cookieKey +
               '=' +
@@ -626,8 +653,7 @@ private struct WebAppView: UIViewRepresentable {
         try {
           const sessionRaw = window.sessionStorage.getItem(key);
           if (sessionRaw) {
-            const parsed = JSON.parse(sessionRaw);
-            parsed.redirect_uri = redirectUri;
+            const parsed = normalize(JSON.parse(sessionRaw));
             window.sessionStorage.setItem(key, JSON.stringify(parsed));
           }
         } catch (error) {
@@ -643,6 +669,11 @@ private struct WebAppView: UIViewRepresentable {
         .replacingOccurrences(of: "'", with: "\\'")
         .replacingOccurrences(of: "\n", with: "\\n")
         .replacingOccurrences(of: "\r", with: "\\r")
+    }
+
+    private static func javaScriptOptionalStringLiteral(_ value: String?) -> String {
+      guard let value else { return "null" }
+      return "'\(javaScriptEscaped(value))'"
     }
   }
 }
