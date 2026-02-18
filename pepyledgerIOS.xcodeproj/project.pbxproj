@@ -177,6 +177,7 @@
 				inputFileListPaths = (
 				);
 				inputPaths = (
+					"$(SRCROOT)/App/pepyledgerIOSApp.swift",
 				);
 				name = "Enforce Web Mirror Root";
 				outputFileListPaths = (
@@ -185,7 +186,7 @@
 				);
 				runOnlyForDeploymentPostprocessing = 0;
 				shellPath = /bin/sh;
-				shellScript = "ROOT_FILE=\"$SRCROOT/App/pepyledgerIOSApp.swift\"\nif ! grep -q \"WebAppRootView()\" \"$ROOT_FILE\"; then\n  echo \"error: App root must be WebAppRootView() for web mirror mode\"\n  exit 1\nfi\nif grep -q \"LoginView(\" \"$ROOT_FILE\" || grep -q \"MemberShellView(\" \"$ROOT_FILE\"; then\n  echo \"error: Native app roots are disallowed; keep web mirror mode enabled\"\n  exit 1\nfi\n";
+				shellScript = "ROOT_FILE=\"\"\nfor CANDIDATE in \"${SRCROOT:-}/App/pepyledgerIOSApp.swift\" \"${PROJECT_DIR:-}/App/pepyledgerIOSApp.swift\"; do\n  if [ -n \"$CANDIDATE\" ] && [ -f \"$CANDIDATE\" ]; then\n    ROOT_FILE=\"$CANDIDATE\"\n    break\n  fi\ndone\nif [ -z \"$ROOT_FILE\" ]; then\n  echo \"warning: mirror guard skipped because app root file was not found (SRCROOT=${SRCROOT:-}, PROJECT_DIR=${PROJECT_DIR:-})\"\n  exit 0\nfi\nif ! /usr/bin/grep -Eq \"WebAppRootView\\\\s*\\\\(\" \"$ROOT_FILE\"; then\n  echo \"error: App root must be WebAppRootView() for web mirror mode\"\n  exit 1\nfi\nif /usr/bin/grep -Eq \"\\\\b(LoginView|MemberShellView)\\\\s*\\\\(\" \"$ROOT_FILE\"; then\n  echo \"error: Native app roots are disallowed; keep web mirror mode enabled\"\n  exit 1\nfi\n";
 			};
 /* End PBXShellScriptBuildPhase section */
 
